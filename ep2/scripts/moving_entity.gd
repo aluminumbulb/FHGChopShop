@@ -17,10 +17,17 @@ var end1: Vector3
 var start2: Vector3
 var end2: Vector3
 
+var entity_blocking:= false ##is another entity or object blocking?
 var floor_exists:= false ##is there a floor tile where we would like to move?
-var entity_blocking:= false ##is another entity blocking?
+
+func _process(delta):
+	if Input.is_action_just_pressed("forward_motion"):
+		move_impulse()
 
 func _ready():
+	pass
+
+func _physics_process(delta):
 	#first ray/offset setup
 	start1 = position
 	end1 = start1 + (basis.z*step_dist)
@@ -28,19 +35,20 @@ func _ready():
 	#second ray setup
 	start2 = end1
 	end2 = end1 - (basis.y*1000)#cast down an arbitrarily large #
-
-func _physics_process(delta):
+	
 	other_entity_check()
 	floor_check()
 	pass
 
-##Returns raycast result in-front/blocking movement
+##Alters truthyness of entity_blocking and sends signal if it has changed
+##since the last frame
 func other_entity_check():
 	#get the state of 3d space
 	var space_state = get_world_3d().direct_space_state
 	#query it along ray
 	var query = PhysicsRayQueryParameters3D.create(start1,end1)
 	#get query result
+	query.exclude = [self]
 	var result = space_state.intersect_ray(query)
 		
 	if result:
@@ -54,7 +62,8 @@ func other_entity_check():
 			entity_blocking = false
 			obst_status_change.emit(entity_blocking)
 
-##Returns raycast result in-front/blocking movement
+##Alters truthyness of floor_exists and sends signal if it has changed
+##since the last frame
 func floor_check():
 	#get the state of 3d space
 	var space_state = get_world_3d().direct_space_state
@@ -64,16 +73,19 @@ func floor_check():
 	var result = space_state.intersect_ray(query)
 	
 	if result:
+		print(result["collider"])
 		#there will be a floor
 		if(not floor_exists):
-			#print("DEBUG: floor still here")
+			print("floor present")
 			floor_exists = true
 			floor_status_change.emit(floor_exists)
 	else:
-		#there will not be
 		if(floor_exists):
+			print("no floor")
 			floor_exists = false
 			floor_status_change.emit(floor_exists)
 
 func move_impulse():
-	pass
+	if(not entity_blocking and floor_exists):
+		print("moving")
+		position+=basis.z

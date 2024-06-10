@@ -1,11 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://brr6irx3f0nix"]
+[gd_scene load_steps=5 format=3 uid="uid://brr6irx3f0nix"]
 
-[ext_resource type="Script" path="res://scripts/moving_entity.gd" id="1_qtqa8"]
+[ext_resource type="PackedScene" uid="uid://cpbxltsua1a84" path="res://actor_scenes/moving_entity.tscn" id="1_x3yxn"]
 [ext_resource type="Script" path="res://play_scenes/DebugScreen.gd" id="2_26qnx"]
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_swdgv"]
-
-[sub_resource type="BoxMesh" id="BoxMesh_qtdx8"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_4iole"]
 
@@ -14,14 +10,11 @@ data = PackedVector3Array(-0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0
 
 [node name="FHGCSEP2" type="Node3D"]
 
-[node name="main_moving_entity" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.40485, -1.12767)
-mesh = SubResource("CapsuleMesh_swdgv")
-script = ExtResource("1_qtqa8")
+[node name="main_moving_entity" parent="." instance=ExtResource("1_x3yxn")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.40485, -1.21984)
 
-[node name="face_box" type="MeshInstance3D" parent="main_moving_entity"]
-transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0, 0, 1)
-mesh = SubResource("BoxMesh_qtdx8")
+[node name="Camera3D" type="Camera3D" parent="main_moving_entity"]
+transform = Transform3D(-1, -6.18172e-08, 6.18172e-08, 0, 0.707107, 0.707107, -8.74228e-08, 0.707107, -0.707107, -0.224148, 2.43435, -1.61259)
 
 [node name="floor" type="MeshInstance3D" parent="."]
 mesh = SubResource("BoxMesh_4iole")
@@ -30,9 +23,6 @@ mesh = SubResource("BoxMesh_4iole")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="floor/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_bo8rj")
-
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -3.93472, 0.644576, -0.0114448)
 
 [node name="DebugScreen" type="CanvasLayer" parent="."]
 script = ExtResource("2_26qnx")
@@ -63,6 +53,3 @@ vertical_alignment = 2
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.88463, -0.0974892, -0.455989, 0.466294, 0.184952, 0.86508, 0, -0.9779, 0.209072, -2.12316, 3.77605, 0)
-
-[connection signal="floor_status_change" from="main_moving_entity" to="DebugScreen" method="_on_main_moving_entity_floor_status_change"]
-[connection signal="obst_status_change" from="main_moving_entity" to="DebugScreen" method="_on_main_moving_entity_obst_status_change"]
