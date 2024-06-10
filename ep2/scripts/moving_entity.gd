@@ -23,6 +23,12 @@ var floor_exists:= false ##is there a floor tile where we would like to move?
 func _process(delta):
 	if Input.is_action_just_pressed("forward_motion"):
 		move_impulse()
+		
+	if Input.is_action_just_pressed("cw_rot"):
+		transform.basis = transform.basis.rotated(basis.y,-(PI/2))
+		
+	if Input.is_action_just_pressed("ccw_rot"):
+		transform.basis = transform.basis.rotated(basis.y,(PI/2))
 
 func _ready():
 	pass
@@ -73,19 +79,17 @@ func floor_check():
 	var result = space_state.intersect_ray(query)
 	
 	if result:
-		print(result["collider"])
 		#there will be a floor
 		if(not floor_exists):
-			print("floor present")
 			floor_exists = true
 			floor_status_change.emit(floor_exists)
 	else:
 		if(floor_exists):
-			print("no floor")
 			floor_exists = false
 			floor_status_change.emit(floor_exists)
 
+##Checks if conditions are right before allowing motion, 
+##performs this motion itself
 func move_impulse():
 	if(not entity_blocking and floor_exists):
-		print("moving")
 		position+=basis.z
