@@ -11,5 +11,6 @@ config_version=5
 [application]
 
 config/name="CS2"
+run/main_scene="res://play_scenes/fhgcsep_2.tscn"
 config/features=PackedStringArray("4.0", "Forward Plus")
 config/icon="res://icon.svg"
