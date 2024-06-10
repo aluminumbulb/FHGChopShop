@@ -1,6 +1,11 @@
+class_name MovingEntity
 extends MeshInstance3D
+ 
 ##An entity capable of checking valid floorspace and moving to it
 ##
+
+signal floor_status_change(fl_stat_ch) ##signals change in floor tile availability
+signal obst_status_change(obst_stat_ch) ##signals change in obstruction
 
 @export var step_dist:=1 ##distance we expect the entity to move each step
 
@@ -12,7 +17,8 @@ var end1: Vector3
 var start2: Vector3
 var end2: Vector3
 
-var floor_exists:= false ##determines if a floor exists in front of entity
+var floor_exists:= false ##is there a floor tile where we would like to move?
+var entity_blocking:= false ##is another entity blocking?
 
 func _ready():
 	#first ray/offset setup
@@ -24,22 +30,50 @@ func _ready():
 	end2 = end1 - (basis.y*1000)#cast down an arbitrarily large #
 
 func _physics_process(delta):
+	other_entity_check()
+	floor_check()
+	pass
+
+##Returns raycast result in-front/blocking movement
+func other_entity_check():
+	#get the state of 3d space
+	var space_state = get_world_3d().direct_space_state
+	#query it along ray
+	var query = PhysicsRayQueryParameters3D.create(start1,end1)
+	#get query result
+	var result = space_state.intersect_ray(query)
+		
+	if result:
+		#there is something in our way
+		if(not entity_blocking):
+			entity_blocking = true
+			obst_status_change.emit(entity_blocking)
+	else:
+		#there is not
+		if(entity_blocking):
+			entity_blocking = false
+			obst_status_change.emit(entity_blocking)
+
+##Returns raycast result in-front/blocking movement
+func floor_check():
 	#get the state of 3d space
 	var space_state = get_world_3d().direct_space_state
 	
 	#floorcheck
-	#query it along ray
 	var query = PhysicsRayQueryParameters3D.create(start2,end2)
-	#get query result
 	var result = space_state.intersect_ray(query)
 	
 	if result:
-		floor_exists = true
+		#there will be a floor
+		if(not floor_exists):
+			#print("DEBUG: floor still here")
+			floor_exists = true
+			floor_status_change.emit(floor_exists)
 	else:
-		floor_exists = false
-		
-
-
+		#there will not be
+		if(floor_exists):
+			floor_exists = false
+			floor_status_change.emit(floor_exists)
 
 func move_impulse():
 	pass
