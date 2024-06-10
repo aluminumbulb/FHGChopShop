@@ -15,7 +15,7 @@ data = PackedVector3Array(-0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0
 [node name="FHGCSEP2" type="Node3D"]
 
 [node name="main_moving_entity" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.40485, -1.01589)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.40485, -1.12767)
 mesh = SubResource("CapsuleMesh_swdgv")
 script = ExtResource("1_qtqa8")
 
@@ -60,6 +60,9 @@ offset_bottom = -41.0
 grow_vertical = 0
 text = "Path Obstructed: False"
 vertical_alignment = 2
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.88463, -0.0974892, -0.455989, 0.466294, 0.184952, 0.86508, 0, -0.9779, 0.209072, -2.12316, 3.77605, 0)
 
 [connection signal="floor_status_change" from="main_moving_entity" to="DebugScreen" method="_on_main_moving_entity_floor_status_change"]
 [connection signal="obst_status_change" from="main_moving_entity" to="DebugScreen" method="_on_main_moving_entity_obst_status_change"]
