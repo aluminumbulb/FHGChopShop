@@ -1,8 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://cokplkjg277uc"]
+[gd_scene load_steps=6 format=3 uid="uid://brr6irx3f0nix"]
 
-[ext_resource type="Script" path="res://play_scenes/moving_entity.gd" id="1_8s8cy"]
+[ext_resource type="Script" path="res://scripts/moving_entity.gd" id="1_qtqa8"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_swdgv"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_qtdx8"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_4iole"]
 
@@ -12,10 +14,13 @@ data = PackedVector3Array(-0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0
 [node name="FHGCSEP2" type="Node3D"]
 
 [node name="moving_entity" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.40485, -1.01589)
 mesh = SubResource("CapsuleMesh_swdgv")
-script = ExtResource("1_8s8cy")
-tile_width_u = 2
+script = ExtResource("1_qtqa8")
+
+[node name="face_box" type="MeshInstance3D" parent="moving_entity"]
+transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0, 0, 1)
+mesh = SubResource("BoxMesh_qtdx8")
 
 [node name="floor" type="MeshInstance3D" parent="."]
 mesh = SubResource("BoxMesh_4iole")
@@ -24,3 +29,6 @@ mesh = SubResource("BoxMesh_4iole")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="floor/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_bo8rj")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -3.93472, 0.644576, -0.0114448)
