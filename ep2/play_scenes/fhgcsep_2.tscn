@@ -1,8 +1,13 @@
-[gd_scene load_steps=4 format=3 uid="uid://brr6irx3f0nix"]
+[gd_scene load_steps=7 format=3 uid="uid://ccm0tmbp1gl7h"]
 
-[ext_resource type="PackedScene" uid="uid://cpbxltsua1a84" path="res://actor_scenes/moving_entity.tscn" id="1_x3yxn"]
-[ext_resource type="Script" path="res://play_scenes/DebugScreen.gd" id="2_26qnx"]
+[ext_resource type="PackedScene" uid="uid://cpbxltsua1a84" path="res://actor_scenes/adversary.tscn" id="1_x3yxn"]
+[ext_resource type="Script" path="res://scripts/DebugScreen.gd" id="2_oqn03"]
 [ext_resource type="MeshLibrary" uid="uid://c864cjgnybnxp" path="res://mesh_libraries/basic_box.tres" id="3_ak2ha"]
+[ext_resource type="Script" path="res://scripts/finder.gd" id="5_6t2aw"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_28o5m"]
+
+[sub_resource type="PrismMesh" id="PrismMesh_tk03x"]
 
 [node name="FHGCSEP2" type="Node3D"]
 
@@ -10,10 +15,10 @@
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 1.5, -1.5)
 
 [node name="Camera3D" type="Camera3D" parent="main_moving_entity"]
-transform = Transform3D(-1, -6.18172e-08, 6.18172e-08, 0, 0.707107, 0.707107, -8.74228e-08, 0.707107, -0.707107, -0.224148, 2.43435, -1.61259)
+transform = Transform3D(-0.0965232, 0, -0.995331, 0, 1, 0, 0.995331, 0, -0.0965232, 1.91012, 2.08498, 2.45935)
 
 [node name="DebugScreen" type="CanvasLayer" parent="."]
-script = ExtResource("2_26qnx")
+script = ExtResource("2_oqn03")
 
 [node name="FloorLabel" type="Label" parent="DebugScreen"]
 anchors_preset = 2
@@ -48,6 +53,20 @@ cell_size = Vector3(1, 1, 1)
 data = {
 "cells": PackedInt32Array(0, 65535, 0, 65535, 65535, 0, 0, 0, 0, 65535, 0, 0, 0, 1, 0, 65535, 1, 0, 1, 65535, 0, 1, 0, 0, 65534, 0, 0, 65534, 65535, 0, 65535, 65534, 0, 0, 65534, 0)
 }
+
+[node name="finder" type="Node3D" parent="." node_paths=PackedStringArray("seeking_agent", "target")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.398556, 1.34768, 0.542692)
+script = ExtResource("5_6t2aw")
+seeking_agent = NodePath("../adversary")
+target = NodePath("../main_moving_entity")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="finder"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+mesh = SubResource("SphereMesh_28o5m")
+
+[node name="adversary" parent="." instance=ExtResource("1_x3yxn")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 1.5, 1.5)
+mesh = SubResource("PrismMesh_tk03x")
 
 [connection signal="floor_status_change" from="main_moving_entity" to="DebugScreen" method="_on_main_moving_entity_floor_status_change"]
 [connection signal="obst_status_change" from="main_moving_entity" to="DebugScreen" method="_on_main_moving_entity_obst_status_change"]
