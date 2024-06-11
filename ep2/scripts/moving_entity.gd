@@ -62,6 +62,7 @@ func other_entity_check():
 		if(not entity_blocking):
 			entity_blocking = true
 			obst_status_change.emit(entity_blocking)
+			
 	else:
 		#there is not
 		if(entity_blocking):
